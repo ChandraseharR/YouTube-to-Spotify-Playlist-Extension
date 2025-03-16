@@ -1,6 +1,7 @@
 // Handle Spotify Authentication and API calls
 let redirectUri = chrome.identity.getRedirectURL('oauth2');
-const clientId = 'cd410dac6652414aaf84e8365ad9c7bb'; // Replace with your actual Spotify Client ID
+const clientId = process.env.SPOTIFY_CLIENT_ID;
+
 const authUrl =
   'https://accounts.spotify.com/authorize?' +
   'client_id=' +
@@ -23,7 +24,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
           return;
         }
 
-        // Extract access token from redirect URL
         const url = new URL(redirectURL);
         const hash = url.hash.substring(1);
         const params = new URLSearchParams(hash);
@@ -46,14 +46,14 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         }
       }
     );
-    return true; // Keep the message channel open for asynchronous response
+    return true;
   }
 
   if (request.action === 'createSpotifyPlaylist') {
     createSpotifyPlaylist(request.songs, request.playlistName)
       .then((result) => sendResponse(result))
       .catch((error) => sendResponse({ success: false, error: error.message }));
-    return true; // Keep the message channel open for asynchronous response
+    return true;
   }
 });
 
@@ -114,7 +114,7 @@ async function createSpotifyPlaylist(songs, name) {
 
     for (const song of songs) {
       try {
-        // Try to parse artist and title for better search
+        // parse artist and title for better search
         const parsed = extractArtistAndTitle(song);
         const searchQuery = parsed.artist
           ? `track:${parsed.title} artist:${parsed.artist}`

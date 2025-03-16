@@ -1,11 +1,14 @@
-// webpack.config.js
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
+const webpack = require('webpack');
+const fs = require('fs');
+
+require('dotenv').config();
 
 module.exports = {
   mode: 'development',
-  // Change this line to use a different source map type
-  devtool: 'inline-source-map', // or 'cheap-source-map'
+  devtool: 'inline-source-map',
   entry: {
     popup: './src/popup.js',
     content: './src/content.js',
@@ -16,8 +19,26 @@ module.exports = {
     filename: '[name].js',
   },
   plugins: [
+    new Dotenv(),
+
+    new webpack.DefinePlugin({
+      'process.env.SPOTIFY_CLIENT_ID': JSON.stringify(
+        process.env.SPOTIFY_CLIENT_ID
+      ),
+    }),
+
     new CopyPlugin({
-      patterns: [{ from: 'public', to: '.' }],
+      patterns: [
+        {
+          from: 'public/manifest.json',
+          to: 'manifest.json',
+          transform(content) {
+            return content
+              .toString()
+              .replace(/__CLIENT_ID__/g, process.env.SPOTIFY_CLIENT_ID || '');
+          },
+        },
+      ],
     }),
   ],
 };

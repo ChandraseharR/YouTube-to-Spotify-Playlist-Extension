@@ -22,7 +22,7 @@
     "extension_pages": "script-src 'self'; object-src 'self'"
   },
   "oauth2": {
-    "client_id": "cd410dac6652414aaf84e8365ad9c7bb",
+    "client_id": "__CLIENT_ID__",
     "scopes": [
       "playlist-modify-private",
       "playlist-modify-public",

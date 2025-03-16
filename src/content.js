@@ -1,4 +1,3 @@
-// content.js
 function getYouTubeSongs(forcedType = 'mix') {
   const url = window.location.href;
   const songs = [];
@@ -51,16 +50,6 @@ function getYouTubeSongs(forcedType = 'mix') {
         }
       });
     }
-    // Focus only on the sidebar playlist panel
-    // const sidebarMixItems = document.querySelectorAll(
-    //   'ytd-playlist-panel-renderer'
-    // );
-    // sidebarMixItems.forEach((item) => {
-    //   const titleElement = item.querySelector('#video-title');
-    //   if (titleElement) {
-    //     songs.push(cleanupSongTitle(titleElement.textContent.trim()));
-    //   }
-    // });
   }
 
   // Remove duplicates
@@ -90,7 +79,7 @@ function cleanupSongTitle(title) {
   return cleanTitle;
 }
 
-// Add artist detection for better Spotify matching
+// Artist detection for better Spotify matching
 function extractArtistAndTitle(fullTitle) {
   // Common patterns: "Artist - Title", "Artist: Title", "Artist "Title""
   const patterns = [
@@ -121,5 +110,5 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     const songs = getYouTubeSongs(request.type);
     sendResponse({ songs: songs });
   }
-  return true; // Keep the message channel open for asynchronous response
+  return true;
 });
